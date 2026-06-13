@@ -1,0 +1,42 @@
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+
+from app.db.database import get_db
+from app.models.ticket import Ticket
+
+router = APIRouter(
+    prefix="/dashboard",
+    tags=["Dashboard"]
+)
+
+
+@router.get("/stats")
+def get_dashboard_stats(
+    db: Session = Depends(get_db)
+):
+    total_tickets = db.query(Ticket).count()
+
+    open_tickets = (
+        db.query(Ticket)
+        .filter(Ticket.status == "Open")
+        .count()
+    )
+
+    in_progress_tickets = (
+        db.query(Ticket)
+        .filter(Ticket.status == "In Progress")
+        .count()
+    )
+
+    closed_tickets = (
+        db.query(Ticket)
+        .filter(Ticket.status == "Closed")
+        .count()
+    )
+
+    return {
+        "total_tickets": total_tickets,
+        "open_tickets": open_tickets,
+        "in_progress_tickets": in_progress_tickets,
+        "closed_tickets": closed_tickets
+    }
