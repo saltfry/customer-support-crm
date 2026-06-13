@@ -1,10 +1,11 @@
+venv/
+node_modules/
+
+*.db
+*.sqlite3
+
 __pycache__/
 *.pyc
 
-venv/
 .env
-
-crm.db
-
-node_modules/
 dist/
